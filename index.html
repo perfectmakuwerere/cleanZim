@@ -218,9 +218,11 @@ footer p { color: var(--muted); margin-top: 16px }
         </div>
         <div class="share">
           <button class="btn primary" type="button" id="copyBtn">Copy pledge text</button>
+          <a class="btn" id="twitterShare" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer">Share on Twitter / X</a>
+          <button class="btn" type="button" id="downloadBtn">Download pledge</button>
           <span class="status" id="status" role="status"></span>
         </div>
-        <p class="caption">Screenshot the card for your status or TikTok, or paste the text with the hashtag.</p>
+        <p class="caption">Share your pledge on Twitter / X, download the card as a PNG, or copy the text for your post.</p>
       </div>
     </div>
   </div>
@@ -299,10 +301,17 @@ footer p { color: var(--muted); margin-top: 16px }
   const q = document.getElementById('cardQ'), who = document.getElementById('cardWho');
   const form = document.getElementById('pledgeForm');
   function habit(){ return form.querySelector('input[name=habit]:checked').value }
+  const twitterShare = document.getElementById('twitterShare');
+  function pledgeText(){ return q.textContent + ' ' + who.textContent + ' #ZimbabweYakachena' }
   function render(){
     const n = nameI.value.trim() || 'Tendai';
     q.textContent = 'I promise to ' + habit() + '.';
     who.textContent = '— ' + n + ', ' + cityI.value;
+    const shareUrl = new URL('https://twitter.com/intent/tweet');
+    shareUrl.searchParams.set('text', pledgeText());
+    shareUrl.searchParams.set('url', 'https://cleanzim.netlify.app/#pledge');
+    twitterShare.href = shareUrl.href;
+    document.getElementById('status').textContent = '';
     try { localStorage.setItem('zy-pledge', JSON.stringify({n:nameI.value, c:cityI.value, h:habit()})) } catch(e){}
   }
   try {
@@ -315,7 +324,7 @@ footer p { color: var(--muted); margin-top: 16px }
   render();
   const status = document.getElementById('status');
   document.getElementById('copyBtn').addEventListener('click', ()=>{
-    const text = q.textContent + ' ' + who.textContent + ' #ZimbabweYakachena';
+    const text = pledgeText();
     const done = ()=>{ status.textContent = 'Copied. Paste it with your post.' };
     try {
       navigator.clipboard.writeText(text).then(done, ()=>fallback(text));
@@ -324,6 +333,62 @@ footer p { color: var(--muted); margin-top: 16px }
       const range = document.createRange(); range.selectNodeContents(document.getElementById('card'));
       const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
       status.textContent = 'Text selected. Copy it from your menu.';
+    }
+  });
+
+  const downloadBtn = document.getElementById('downloadBtn');
+  downloadBtn.addEventListener('click', async ()=>{
+    downloadBtn.disabled = true;
+    status.textContent = 'Preparing your pledge…';
+    // Capture the displayed pledge before waiting for fonts.
+    const quote = q.textContent, signature = who.textContent;
+    try {
+      if (document.fonts) await document.fonts.ready;
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200; canvas.height = 800;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas unavailable');
+      const style = getComputedStyle(document.getElementById('card'));
+      ctx.fillStyle = style.backgroundColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--jacaranda').trim();
+      ctx.globalAlpha = 0.35;
+      ctx.beginPath(); ctx.arc(1130, 70, 210, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = style.color;
+      ctx.textBaseline = 'top';
+      ctx.font = '24px "JetBrains Mono", monospace';
+      ctx.fillText('ZIMBABWE YAKACHENA · PLEDGE', 80, 80);
+      function wrap(text, y, lineHeight){
+        let line = '';
+        for (const char of Array.from(text)) {
+          if (ctx.measureText(line + char).width > 1040 && line) {
+            ctx.fillText(line.trimEnd(), 80, y);
+            y += lineHeight;
+            line = char.trimStart();
+          } else line += char;
+        }
+        if (line) ctx.fillText(line, 80, y);
+        return y + lineHeight;
+      }
+      ctx.font = '700 64px "Syne", sans-serif';
+      const signatureY = wrap(quote, 210, 78) + 36;
+      ctx.font = '500 32px "Instrument Sans", sans-serif';
+      wrap(signature, signatureY, 44);
+      ctx.font = '26px "JetBrains Mono", monospace';
+      ctx.fillText('#ZimbabweYakachena', 80, 660);
+      const blob = await new Promise(resolve=>canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('Image unavailable');
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'zimbabwe-yakachena-pledge.png';
+      document.body.appendChild(link); link.click(); link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 60000);
+      status.textContent = 'Pledge PNG ready. Check your downloads.';
+    } catch(e) {
+      status.textContent = 'Download unavailable. Please try again or copy your pledge text.';
+    } finally {
+      downloadBtn.disabled = false;
     }
   });
 
