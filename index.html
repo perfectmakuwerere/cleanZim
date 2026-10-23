@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Zimbabwe Yakachena: an anti-littering campaign. Take the pledge and organise a clean-up on your street.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Zimbabwe Yakachena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one long street — a hero you can clean with your hands, then the why, the habits, the pledge, the clean-up kit. Msasa copper + jacaranda on granite. */
+:root {
+  --bg: #f3f1ec;          /* granite, sun-bleached */
+  --surface: #e6e2d9;
+  --ink: #1f2420;
+  --muted: #5b6159;
+  --msasa: #b5452a;        /* new msasa leaves, Sept–Oct */
+  --jacaranda: #6b4fa0;    /* Harare streets in October */
+  --leaf: #2f6b46;
+  --line: #cfcabd;
+  --street: #c9c2b2;
+  --on-accent: #fff8f2;
+  --display: "Syne", "Arial Black", system-ui, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #171a17; --surface: #222621; --ink: #ece8df; --muted: #a3a89d;
+  --msasa: #e0704f; --jacaranda: #a78bdc; --leaf: #6fbf8c; --line: #343a33;
+  --street: #2c302a; --on-accent: #1a0f0b; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #171a17; --surface: #222621; --ink: #ece8df; --muted: #a3a89d;
+  --msasa: #e0704f; --jacaranda: #a78bdc; --leaf: #6fbf8c; --line: #343a33;
+  --street: #2c302a; --on-accent: #1a0f0b; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); line-height: 1.02; text-wrap: balance; margin: 0; letter-spacing: -0.01em }
+p { margin: 0; max-width: 62ch }
+.eyebrow { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--msasa) }
+a { color: var(--jacaranda) }
+:focus-visible { outline: 3px solid var(--jacaranda); outline-offset: 3px }
+section { padding-block: clamp(56px, 9vw, 104px); border-top: 1px solid var(--line) }
+
+/* hero */
+.hero { padding-block: clamp(28px, 5vw, 56px) clamp(40px, 7vw, 72px); display: grid; gap: 28px; grid-template-columns: 1.05fr 1fr; align-items: center }
+.hero > * { min-width: 0 }
+.hero h1 { font-size: clamp(3rem, 9vw, 6.4rem); font-weight: 800 }
+.hero h1 span { display: block; color: var(--msasa) }
+.hero .tr { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); margin-top: 14px }
+.hero .lede { margin-top: 22px; font-size: 1.15rem; color: var(--ink) }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px }
+.btn { font: 600 1rem var(--body); border: 2px solid var(--ink); background: transparent; color: var(--ink); padding: 12px 20px; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-block }
+.btn.primary { background: var(--msasa); border-color: var(--msasa); color: var(--on-accent) }
+.btn:hover { transform: translateY(-1px) }
+
+/* the street */
+.street { position: relative; aspect-ratio: 5 / 4; max-width: 100%; background:
+  repeating-linear-gradient(90deg, transparent 0 46px, color-mix(in srgb, var(--line) 70%, transparent) 46px 48px),
+  var(--street); border-radius: 6px; overflow: hidden; border: 1px solid var(--line) }
+.street::after { content: ""; position: absolute; left: 0; right: 0; bottom: 18%; height: 6px; background: repeating-linear-gradient(90deg, var(--bg) 0 34px, transparent 34px 60px); opacity: .7 }
+.counter { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.8rem; z-index: 2 }
+.counter b { background: var(--bg); padding: 4px 10px; border-radius: 999px; font-variant-numeric: tabular-nums }
+.counter button { font: 500 0.75rem var(--mono); background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer }
+.litter { position: absolute; border: 0; padding: 0; cursor: pointer; transition: transform .35s ease, opacity .35s ease; background: none }
+.litter:hover { transform: scale(1.15) rotate(var(--r)) !important }
+.litter.gone { opacity: 0; transform: translateY(-40px) scale(.4) !important; pointer-events: none }
+.bottle { width: 18px; height: 44px; border-radius: 6px 6px 4px 4px; background: color-mix(in srgb, var(--leaf) 55%, transparent); border: 2px solid var(--leaf) }
+.bag { width: 40px; height: 34px; border-radius: 40% 40% 12px 12px; background: color-mix(in srgb, var(--bg) 70%, transparent); border: 2px dashed var(--muted) }
+.wrapper { width: 34px; height: 16px; border-radius: 3px; background: var(--msasa); clip-path: polygon(0 20%, 10% 0, 90% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%) }
+.can { width: 22px; height: 30px; border-radius: 4px; background: linear-gradient(90deg, var(--jacaranda), color-mix(in srgb, var(--jacaranda) 50%, var(--bg))) }
+.clean-msg { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; z-index: 1 }
+.clean-msg h3 { font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--leaf) }
+.clean-msg p { margin: 8px auto 0; color: var(--muted) }
+.caption { font-size: 0.85rem; color: var(--muted); margin-top: 10px }
+
+/* why */
+.why { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 36px 40px; margin-top: 40px }
+.why h3 { font-size: 1.25rem; margin-bottom: 8px }
+.why .k { font-family: var(--mono); font-size: 0.72rem; color: var(--jacaranda); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; display: block }
+.sh { font-size: clamp(2rem, 5vw, 3.2rem); max-width: 18ch }
+
+/* habits */
+.habits { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 40px }
+.habit { background: var(--surface); padding: 28px 24px; border-radius: 4px; display: flex; flex-direction: column; gap: 10px }
+.habit .sn { font-family: var(--display); font-size: 1.6rem; font-weight: 700; color: var(--msasa) }
+.habit .en { font-weight: 600 }
+.habit p { color: var(--muted) }
+
+/* pledge */
+.pledge { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; align-items: start }
+.pledge > * { min-width: 0 }
+form { display: grid; gap: 18px }
+label { font-weight: 600; font-size: 0.95rem; display: grid; gap: 6px }
+input, select { font: 400 1rem var(--body); padding: 12px 14px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 4px; width: 100% }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px }
+legend { font-weight: 600; font-size: 0.95rem; margin-bottom: 6px }
+.opt { display: flex; gap: 10px; align-items: flex-start; font-weight: 400 }
+.opt input { width: auto; margin-top: 6px; accent-color: var(--msasa) }
+.card { background: var(--msasa); color: var(--on-accent); padding: 32px 28px; border-radius: 4px; display: grid; gap: 18px; position: relative; overflow: hidden }
+.card::before { content: ""; position: absolute; right: -40px; top: -40px; width: 160px; height: 160px; border-radius: 50%; background: color-mix(in srgb, var(--jacaranda) 70%, transparent) }
+.card .t { font-family: var(--mono); font-size: 0.72rem; letter-spacing: .12em; text-transform: uppercase; position: relative }
+.card .q { font-family: var(--display); font-size: clamp(1.5rem, 3.4vw, 2.1rem); line-height: 1.1; font-weight: 700; position: relative }
+.card .who { position: relative; font-weight: 500 }
+.card .tag { font-family: var(--mono); font-size: 0.85rem; position: relative }
+.share { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px }
+.status { font-size: 0.9rem; color: var(--leaf) }
+
+/* kit */
+.kit { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px }
+.kit > * { min-width: 0 }
+.check { list-style: none; padding: 0; margin: 0; display: grid; gap: 0 }
+.check li { border-top: 1px solid var(--line); padding: 14px 0; display: flex; gap: 14px; align-items: flex-start }
+.check li:last-child { border-bottom: 1px solid var(--line) }
+.check input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--leaf); flex: none }
+.check label { font-weight: 400; display: block }
+.check .done label { color: var(--muted); text-decoration: line-through }
+.steps { display: grid; gap: 22px; counter-reset: s }
+.steps div { padding-left: 52px; position: relative }
+.steps div::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: -2px; font-family: var(--display); font-weight: 800; font-size: 1.8rem; color: var(--jacaranda) }
+.steps h3 { font-size: 1.1rem; margin-bottom: 4px }
+.steps p { color: var(--muted) }
+
+footer { border-top: 1px solid var(--line); padding-block: 48px 64px }
+footer .big { font-family: var(--display); font-weight: 800; font-size: clamp(2.2rem, 7vw, 4.6rem); line-height: 1 }
+footer .big span { color: var(--leaf) }
+footer p { color: var(--muted); margin-top: 16px }
+
+@media (max-width: 760px) {
+  .hero, .pledge, .kit { grid-template-columns: 1fr }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">An anti-littering campaign</div>
+      <h1 style="margin-top:14px">Zimbabwe <span>Yakachena.</span></h1>
+      <div class="tr">yah-kah-CHEH-nah · "Zimbabwe is clean"</div>
+      <p class="lede">Our streets, rivers and kombi ranks hold what we drop on them. This campaign is about small daily habits that keep rubbish where it belongs, from Harare to Victoria Falls.</p>
+      <div class="cta">
+        <a class="btn primary" href="#pledge">Take the pledge</a>
+        <a class="btn" href="#cleanup">Plan a clean-up</a>
+      </div>
+    </div>
+    <div>
+      <div class="street" id="street" aria-label="A street with litter. Tap each piece to pick it up.">
+        <div class="counter"><b id="count">0 picked up</b><button type="button" id="reset">Litter it again</button></div>
+        <div class="clean-msg" id="cleanMsg" hidden>
+          <div>
+            <h3>Yakachena.</h3>
+            <p>That took a few seconds. Imagine every street did it.</p>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Tap the rubbish to pick it up.</p>
+    </div>
+  </header>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Why it matters</div>
+    <h2 class="sh" style="margin-top:12px">Litter doesn't stay where it lands.</h2>
+    <div class="why">
+      <div><span class="k">Rainy season</span><h3>It blocks the drains</h3><p>Plastic bags and bottles wash into storm drains. When the summer rains come, blocked drains turn roads into rivers and flood homes and markets.</p></div>
+      <div><span class="k">Air</span><h3>It gets burned</h3><p>Piles of rubbish often end up on fire. Burning plastic releases smoke that families, children and street vendors breathe every day.</p></div>
+      <div><span class="k">Animals</span><h3>Livestock eat it</h3><p>Goats and cattle graze near roads and dumps. Plastic in their stomachs can kill them, and that is a family's savings lost.</p></div>
+      <div><span class="k">Pride</span><h3>It's how visitors see us</h3><p>Clean streets say something about who we are. Tourism and local business both do better in a town people want to walk through.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Three habits</div>
+    <h2 class="sh" style="margin-top:12px">Start with what's in your hand.</h2>
+    <div class="habits">
+      <div class="habit"><div class="sn">Chengeta.</div><div class="en">Keep it until you find a bin.</div><p>Wrapper, airtime card, bottle. Pocket it, bag it, carry it home. Never out of the kombi window.</p></div>
+      <div class="habit"><div class="sn">Uya nebhegi.</div><div class="en">Bring your own bag.</div><p>Take a reusable bag to Mbare, the supermarket and the tuckshop. Say no to the extra plastic one.</p></div>
+      <div class="habit"><div class="sn">Nhanho imwe.</div><div class="en">Pick up one piece a day.</div><p>One piece, every day, on your own street. It adds up faster than anyone expects.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pledge">
+  <div class="wrap">
+    <div class="eyebrow">The pledge</div>
+    <h2 class="sh" style="margin-top:12px">Make it yours, then share it.</h2>
+    <div class="pledge">
+      <form id="pledgeForm">
+        <label for="pname">Your name
+          <input id="pname" name="pname" type="text" autocomplete="given-name" placeholder="e.g. Tendai" maxlength="40">
+        </label>
+        <label for="pcity">Your town
+          <select id="pcity" name="pcity">
+            <option>Harare</option><option>Bulawayo</option><option>Chitungwiza</option><option>Mutare</option><option>Gweru</option><option>Kwekwe</option><option>Masvingo</option><option>Chinhoyi</option><option>Kadoma</option><option>Marondera</option><option>Victoria Falls</option><option>Hwange</option><option>Bindura</option><option>Beitbridge</option><option>Another town</option>
+          </select>
+        </label>
+        <fieldset>
+          <legend>I promise to</legend>
+          <label class="opt"><input type="radio" name="habit" value="keep my rubbish until I find a bin" id="h1" checked> Keep my rubbish until I find a bin</label>
+          <label class="opt"><input type="radio" name="habit" value="bring my own bag and refuse extra plastic" id="h2"> Bring my own bag and refuse extra plastic</label>
+          <label class="opt"><input type="radio" name="habit" value="pick up one piece of litter every day" id="h3"> Pick up one piece of litter every day</label>
+        </fieldset>
+      </form>
+      <div>
+        <div class="card" id="card" aria-live="polite">
+          <div class="t">Zimbabwe Yakachena · Pledge</div>
+          <div class="q" id="cardQ">I promise to keep my rubbish until I find a bin.</div>
+          <div class="who" id="cardWho">— Tendai, Harare</div>
+          <div class="tag">#ZimbabweYakachena</div>
+        </div>
+        <div class="share">
+          <button class="btn primary" type="button" id="copyBtn">Copy pledge text</button>
+          <span class="status" id="status" role="status"></span>
+        </div>
+        <p class="caption">Screenshot the card for your status or TikTok, or paste the text with the hashtag.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cleanup">
+  <div class="wrap">
+    <div class="eyebrow">Organise a clean-up</div>
+    <h2 class="sh" style="margin-top:12px">Your street, one Saturday morning.</h2>
+    <div class="kit">
+      <div class="steps">
+        <div><h3>Pick a spot and a time</h3><p>A road, a kombi rank, a school ground, a stretch of river. Early Saturday is cool and quiet.</p></div>
+        <div><h3>Tell your neighbours</h3><p>Post it in the WhatsApp group, at church, at the tuckshop. Ten people clear a lot more than one.</p></div>
+        <div><h3>Take a "before" photo</h3><p>Same angle before and after. That photo is what makes people join the next one.</p></div>
+        <div><h3>Sort as you collect</h3><p>Bottles and cans in one bag for recyclers, everything else in another. Hand recyclables to local collectors.</p></div>
+        <div><h3>Post the "after"</h3><p>Share both photos with #ZimbabweYakachena so others can copy the idea in their own area.</p></div>
+      </div>
+      <div>
+        <h3 style="font-size:1.2rem;margin-bottom:12px">Bring with you</h3>
+        <ul class="check" id="kit">
+          <li><input type="checkbox" id="k1"><label for="k1">Gloves for everyone</label></li>
+          <li><input type="checkbox" id="k2"><label for="k2">Strong refuse bags, two colours if you can</label></li>
+          <li><input type="checkbox" id="k3"><label for="k3">Water and a hat</label></li>
+          <li><input type="checkbox" id="k4"><label for="k4">A plan for where the full bags go (council collection point or skip)</label></li>
+          <li><input type="checkbox" id="k5"><label for="k5">A phone for before and after photos</label></li>
+          <li><input type="checkbox" id="k6"><label for="k6">Sanitiser for afterwards</label></li>
+        </ul>
+        <p class="caption">Ticks are saved on this device only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="big">Chengeta nyika yako. <span>Yakachena.</span></div>
+    <p>Look after your country. Follow the campaign on TikTok and post your own clean-up with #ZimbabweYakachena.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const street = document.getElementById('street');
+  const countEl = document.getElementById('count');
+  const msg = document.getElementById('cleanMsg');
+  const kinds = [['bottle','plastic bottle'],['bag','plastic bag'],['wrapper','sweet wrapper'],['can','drink can']];
+  let picked = 0, total = 0;
+  function rand(a,b){return a + Math.random()*(b-a)}
+  function scatter(){
+    street.querySelectorAll('.litter').forEach(n=>n.remove());
+    picked = 0; total = 11; msg.hidden = true; update();
+    for (let i=0;i<total;i++){
+      const [cls,name] = kinds[i % kinds.length];
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'litter ' + cls;
+      b.setAttribute('aria-label','Pick up ' + name);
+      const r = Math.round(rand(-70,70)) + 'deg';
+      b.style.setProperty('--r', r);
+      b.style.transform = 'rotate(' + r + ')';
+      b.style.left = rand(6,86) + '%';
+      b.style.top = rand(18,82) + '%';
+      b.addEventListener('click', ()=>{
+        if (b.classList.contains('gone')) return;
+        b.classList.add('gone'); picked++; update();
+        if (picked === total) setTimeout(()=>{ msg.hidden = false }, 300);
+      });
+      street.appendChild(b);
+    }
+  }
+  function update(){ countEl.textContent = picked + ' of ' + total + ' picked up' }
+  document.getElementById('reset').addEventListener('click', scatter);
+  scatter();
+
+  // pledge
+  const nameI = document.getElementById('pname'), cityI = document.getElementById('pcity');
+  const q = document.getElementById('cardQ'), who = document.getElementById('cardWho');
+  const form = document.getElementById('pledgeForm');
+  function habit(){ return form.querySelector('input[name=habit]:checked').value }
+  function render(){
+    const n = nameI.value.trim() || 'Tendai';
+    q.textContent = 'I promise to ' + habit() + '.';
+    who.textContent = '— ' + n + ', ' + cityI.value;
+    try { localStorage.setItem('zy-pledge', JSON.stringify({n:nameI.value, c:cityI.value, h:habit()})) } catch(e){}
+  }
+  try {
+    const s = JSON.parse(localStorage.getItem('zy-pledge') || 'null');
+    if (s){ nameI.value = s.n || ''; cityI.value = s.c || 'Harare';
+      const r = [...form.querySelectorAll('input[name=habit]')].find(x=>x.value===s.h); if (r) r.checked = true; }
+  } catch(e){}
+  form.addEventListener('input', render); form.addEventListener('change', render);
+  form.addEventListener('submit', e=>e.preventDefault());
+  render();
+  const status = document.getElementById('status');
+  document.getElementById('copyBtn').addEventListener('click', ()=>{
+    const text = q.textContent + ' ' + who.textContent + ' #ZimbabweYakachena';
+    const done = ()=>{ status.textContent = 'Copied. Paste it with your post.' };
+    try {
+      navigator.clipboard.writeText(text).then(done, ()=>fallback(text));
+    } catch(e){ fallback(text) }
+    function fallback(t){
+      const range = document.createRange(); range.selectNodeContents(document.getElementById('card'));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      status.textContent = 'Text selected. Copy it from your menu.';
+    }
+  });
+
+  // kit checklist
+  const boxes = document.querySelectorAll('#kit input');
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem('zy-kit') || '{}') } catch(e){}
+  boxes.forEach(b=>{
+    b.checked = !!saved[b.id]; b.closest('li').classList.toggle('done', b.checked);
+    b.addEventListener('change', ()=>{
+      saved[b.id] = b.checked; b.closest('li').classList.toggle('done', b.checked);
+      try { localStorage.setItem('zy-kit', JSON.stringify(saved)) } catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
